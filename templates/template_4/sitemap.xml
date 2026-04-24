@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <url>
+        <loc>https://trzon-fundoria.pl/</loc>
+    </url>
+
+    <url> 
+        <loc>https://trzon-fundoria.pl/sign.php</loc>
+    </url>
+
+    <url>
+        <loc>https://trzon-fundoria.pl/product.php</loc>
+    </url>
+
+    <url>
+        <loc>https://trzon-fundoria.pl/privacy.php</loc>
+    </url>
+
+    <url>
+        <loc>https://trzon-fundoria.pl/offer.php</loc>
+    </url>
+
+    <url>
+        <loc>https://trzon-fundoria.pl/faq.php</loc>
+    </url>
+
+    <url>
+        <loc>https://trzon-fundoria.pl/contacts.php</loc>
+    </url>
+
+    <url>
+        <loc>https://trzon-fundoria.pl/conditions.php</loc>
+    </url>
+</urlset>
