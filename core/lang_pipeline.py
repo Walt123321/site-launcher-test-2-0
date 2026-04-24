@@ -1756,40 +1756,8 @@ def generate_lang_files(
         # TEMPLATE 4
         # -------------------------
         elif template_kind == "template_4":
-            content = template_bytes.decode("utf-8")
-        
-            import re
-        
-            strings = []
-            spans = []
-        
-            # тільки для template_4 — простий і надійний парсер
-            for m in re.finditer(r'\$[A-Za-z_]\w*\s*=\s*"([^"]*)"', content):
-                strings.append(m.group(1))
-                spans.append((m.start(1), m.end(1)))
-        
-            for m in re.finditer(r"\$[A-Za-z_]\w*\s*=\s*'([^']*)'", content):
-                strings.append(m.group(1))
-                spans.append((m.start(1), m.end(1)))
-        
-            if not strings:
-                raise Exception("TEMPLATE_4: strings not found")
-        
-            outs = _llm_transform_strings_onepass(
-                strings=strings,
-                geo_code=geo_code,
-                geo_currency=geo_currency,
-                target_lang=target_lang,
-                model=model,
-                brand=brand,
-                country_name=country_name,
-                progress_cb=progress_cb,
-            )
-        
-            content = _apply_strings(content, spans, outs)
-        
-            return [(domains[0], content)]
-
+            # тимчасово використовуємо стабільну логіку template_3
+            template_kind = "template_3"
 
 
         # -------------------------
