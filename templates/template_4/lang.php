@@ -2,7 +2,7 @@
 // MANUAL
 $site_name = "Test";
 $app_price = 250;
-$site_domain = "test.com.ua";
+$site_domain = "{{DOMAIN}}";
 $site_url = "https://$site_domain";
 $rating_value = 4.6;
 $rating_count = 2648;
