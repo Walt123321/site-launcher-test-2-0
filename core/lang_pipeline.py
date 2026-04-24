@@ -40,113 +40,6 @@ SPECIAL_STRING = {
     "page_description_main",
     "site_name",
     "crypto_img",
-    # Template_4 specific:
-    "review_1_author",
-    "review_1_initials",
-    "review_2_author",
-    "review_2_initials",
-    "review_3_author",
-    "review_3_initials",
-    "review_4_author",
-    "review_4_initials",
-}
-
-# ============================================================================
-# GEO-SPECIFIC PERSONAS FOR TEMPLATE_4 (реальні імена для кожної країни)
-# ============================================================================
-# Format: {cc: [(FirstName, LastName, City, Gender), ...]}
-# Gender: F (Female), M (Male) - для граматично правильного тексту в відгуках
-GEO_PERSONAS = {
-    "DE": [  # Deutschland
-        ("Michael", "Weber", "Berlin", "M"),
-        ("Anna", "Schmidt", "Munich", "F"),
-        ("Klaus", "Hoffmann", "Frankfurt", "M"),
-        ("Sophia", "Mueller", "Hamburg", "F"),
-    ],
-    "IT": [  # Italia
-        ("Marco", "Rossi", "Milano", "M"),
-        ("Giulia", "Bianchi", "Roma", "F"),
-        ("Giovanni", "Ferrari", "Bologna", "M"),
-        ("Lucia", "Conti", "Napoli", "F"),
-    ],
-    "ES": [  # España
-        ("Carlos", "Méndez", "Barcelona", "M"),
-        ("María", "García", "Madrid", "F"),
-        ("Santiago", "Rodríguez", "Valencia", "M"),
-        ("Elena", "Ferrer", "Sevilla", "F"),
-    ],
-    "FR": [  # France
-        ("Pierre", "Dupont", "Paris", "M"),
-        ("Sophie", "Martin", "Lyon", "F"),
-        ("Jacques", "Leclerc", "Marseille", "M"),
-        ("Isabelle", "Moreau", "Toulouse", "F"),
-    ],
-    "PL": [  # Polska
-        ("Piotr", "Nowak", "Warszawa", "M"),
-        ("Katarzyna", "Kowalski", "Kraków", "F"),
-        ("Andrzej", "Lewandowski", "Wrocław", "M"),
-        ("Joanna", "Szymańska", "Gdańsk", "F"),
-    ],
-    "GB": [  # United Kingdom
-        ("James", "Mitchell", "London", "M"),
-        ("Emma", "Johnson", "Manchester", "F"),
-        ("Michael", "Thompson", "Birmingham", "M"),
-        ("Sarah", "Williams", "Liverpool", "F"),
-    ],
-    "AT": [  # Österreich
-        ("Thomas", "Gruber", "Wien", "M"),
-        ("Elisabeth", "Fischer", "Salzburg", "F"),
-        ("Wolfgang", "Braun", "Linz", "M"),
-        ("Martha", "Wagner", "Graz", "F"),
-    ],
-    "CH": [  # Schweiz
-        ("Martin", "Keller", "Zürich", "M"),
-        ("Claudia", "Schmid", "Bern", "F"),
-        ("Josef", "Müller", "Basel", "M"),
-        ("Renée", "Dupuis", "Genève", "F"),
-    ],
-    "NL": [  # Nederland
-        ("Bert", "Jansen", "Amsterdam", "M"),
-        ("Linda", "de Vries", "Rotterdam", "F"),
-        ("Pieter", "Hendrikse", "Utrecht", "M"),
-        ("Marjan", "Molenaar", "The Hague", "F"),
-    ],
-    "UA": [  # Україна
-        ("Олександр", "Іванов", "Київ", "M"),
-        ("Марія", "Кравченко", "Львів", "F"),
-        ("Сергій", "Петренко", "Харків", "M"),
-        ("Ольга", "Сидоренко", "Одеса", "F"),
-    ],
-    "CZ": [  # Česko
-        ("Jan", "Novák", "Praha", "M"),
-        ("Maria", "Svobodová", "Brno", "F"),
-        ("Petr", "Dvořák", "Ostrava", "M"),
-        ("Helena", "Nováková", "Plzeň", "F"),
-    ],
-    "SE": [  # Sverige
-        ("Lars", "Andersson", "Stockholm", "M"),
-        ("Anna", "Bergström", "Göteborg", "F"),
-        ("Erik", "Lundgren", "Malmö", "M"),
-        ("Maria", "Karlsson", "Uppsala", "F"),
-    ],
-    "PT": [  # Portugal
-        ("João", "Silva", "Lisbon", "M"),
-        ("Rosa", "Santos", "Porto", "F"),
-        ("Miguel", "Oliveira", "Covilhã", "M"),
-        ("Sophia", "Ferreira", "Braga", "F"),
-    ],
-    "TR": [  # Türkiye
-        ("Ahmet", "Yılmaz", "Istanbul", "M"),
-        ("Ayşe", "Kaya", "Ankara", "F"),
-        ("Mehmet", "Demir", "Izmir", "M"),
-        ("Fatima", "Öztürk", "Bursa", "F"),
-    ],
-    "RO": [  # România
-        ("Ion", "Popescu", "Bucharest", "M"),
-        ("Maria", "Ionescu", "Cluj-Napoca", "F"),
-        ("Gheorghe", "Vasilescu", "Timișoara", "M"),
-        ("Anica", "Georgescu", "Iași", "F"),
-    ],
 }
 
 CURRENCY_FALLBACK = {
@@ -1752,14 +1645,35 @@ def generate_lang_files(
                 outs=_llm_transform_strings_onepass(client,model,strings,target_lang,geo_code)
                 content=_apply_strings(content,spans,outs)
 
+
+
         # -------------------------
         # TEMPLATE 4
         # -------------------------
         elif template_kind == "template_4":
-            # тимчасово використовуємо стабільну логіку template_3
-            template_kind = "template_3"
-
-
+        
+            if progress_cb:
+                progress_cb((idx - 1) / total, f"Генерую базові дані для {domain}…")
+        
+            # базові поля (як template_1)
+            price = _make_price(geo_currency)
+        
+            content = _set_php_var(content, "site_name", "$source", numeric=False)
+            content = _set_php_var(content, "site_url", f"https://{domain}", numeric=False)
+            content = _set_php_var(content, "app_currency", geo_currency, numeric=False)
+            content = _set_php_var(content, "app_price", str(price), numeric=True)
+            content = _set_php_var(content, "site_lang", target_lang, numeric=False)
+            content = _set_php_var(content, "site_gmail", _gmail_for_domain(domain), numeric=False)
+        
+            # 🔥 головне — переклад всього тексту
+            if progress_cb:
+                progress_cb((idx - 1) / total + 0.6 / total, f"Переклад template_4 для {domain}…")
+        
+            strings, spans = _extract_strings(content)
+        
+            if strings:
+                outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
+                content = _apply_strings(content, spans, outs)
         # -------------------------
         # TEMPLATE 2 (fixed flow)
         # -------------------------
@@ -1870,7 +1784,6 @@ def generate_lang_files_multi(
     template1_bytes: bytes,
     template2_bytes: bytes,
     template3_bytes: bytes,
-    template4_bytes: bytes,
     geo_code: Optional[str],
     geo_currency: str,
     target_lang: str,
@@ -1931,7 +1844,7 @@ def generate_lang_files_multi(
             if files:
                 out.append(files[0])
         except Exception as e:
-            raise e
+            print(f"[ERROR] {d}: {e}")
         time.sleep(1.2)  # 🔥 КРИТИЧНО
 
     return out
