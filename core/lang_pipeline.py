@@ -1752,9 +1752,73 @@ def generate_lang_files(
                 outs=_llm_transform_strings_onepass(client,model,strings,target_lang,geo_code)
                 content=_apply_strings(content,spans,outs)
 
-
+        # -------------------------
+        # TEMPLATE 4 (fixed flow)
+        # -------------------------
         elif template_kind == "template_4":
-            pass
+            if progress_cb:
+                progress_cb((idx - 1) / total, f"Генерую MANUAL/імена/прибутки для {domain}…")
+
+            # MANUAL scalars
+            rating_value = round(random.uniform(4.5, 5.0), 1)
+            rating_count = random.randint(350, 5000)
+            price = _make_price(geo_currency)
+
+            def _fmt_money(amount: int, currency_code: str) -> str:
+                # thousands separated by comma, no decimals
+                return f"{amount:,} {currency_code}".strip()
+
+            # Ask LLM ONLY for: currency word (localized), names with required gender, headings/title/description
+            gen2 = _generate_template2_manual_via_llm(
+                client=client,
+                model=model,
+                cc=cc,
+                target_lang=target_lang,
+                currency=geo_currency,          # код валюти як контекст
+                app_price=price,
+                brand=brand,
+            )
+
+            currency_code = geo_currency.strip().upper()
+
+            # 1) Спочатку переклад/унікалізація всіх "звичайних" рядків (потім заоверрайдимо MANUAL)
+            if progress_cb:
+                progress_cb((idx - 1) / total + 0.55 / total, f"Переклад/унікалізація текстів для {domain}…")
+
+            strings, spans = _extract_strings(content)
+            if strings:
+                outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
+                content = _apply_strings(content, spans, outs)
+
+            # 2) Тепер override MANUAL змінних — гарантуємо структуру/плейсхолдери
+            content = _set_php_var(content, "site_name", brand, numeric=False)
+            content = _set_php_var(content, "site_url", f"https://{domain}", numeric=False)
+            content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
+            content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
+            content = _set_php_var(content, "app_price", str(price), numeric=True)
+            content = _set_php_var(content, "app_currency", currency_code, numeric=False)
+            content = _set_php_var(content, "site_lang", target_lang, numeric=False)
+
+
+            # 3) LLM-generated MANUAL texts (names + headings/title/description)
+            for k in (
+                "review_1_author",
+                "review_1_initials",
+                "review_2_author",
+                "review_2_initials",
+                "review_3_author",
+                "review_3_initials",
+                "review_4_author",
+                "review_4_initials",
+                "home_meta_title",
+                "home_meta_description",
+            ):
+                v = (gen2.get(k) or "").strip()
+                if v:
+                    content = _set_php_var(content, k, v, numeric=False)
+
+
+
         # -------------------------
         # TEMPLATE 2 (fixed flow)
         # -------------------------
