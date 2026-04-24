@@ -1653,7 +1653,7 @@ elif st.session_state.step == 3:
                         template2_bytes=open(TEMPLATES["template_2"]["lang"], "rb").read(),
                         template3_bytes=open(TEMPLATES["template_3"]["lang"], "rb").read(),
                         template4_bytes=open(TEMPLATES["template_4"]["lang"], "rb").read(),
-                        template_name = domain_templates.get(domain, "template_1")
+                        template_name = domain_templates.get(domain, "template_1"),
                         domain_templates=st.session_state.get("domain_templates", {}),
                         geo_code=geo_code,
                         geo_currency=geo_currency,
