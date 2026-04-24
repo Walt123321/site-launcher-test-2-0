@@ -5,6 +5,8 @@ import json
 import random
 from typing import Dict, List, Optional, Callable, Tuple
 import time
+import streamlit as st
+
 
 
 
@@ -1183,8 +1185,8 @@ def _extract_strings(content: str) -> Tuple[List[str], List[Tuple[int, int]]]:
     """
     strings: List[str] = []
     spans: List[Tuple[int, int]] = []
-    print("STRINGS:", strings[:10])
-    print("COUNT:", len(strings))
+    st.write("STRINGS COUNT:", len(strings))
+    st.write(strings[:5])
 
     # --- (A) прості присвоєння з одним літералом ---
     for m in _ASSIGN_RE.finditer(content):
@@ -1753,6 +1755,8 @@ def generate_lang_files(
             if strings:
                 outs=_llm_transform_strings_onepass(client,model,strings,target_lang,geo_code)
                 content=_apply_strings(content,spans,outs)
+                st.write("OUTS COUNT:", len(outs))
+                st.write(outs[:5])
 
         # -------------------------
         # TEMPLATE 4
