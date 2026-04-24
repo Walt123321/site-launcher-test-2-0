@@ -1130,7 +1130,10 @@ def _generate_specials_via_llm(
 # Covers:
 #   $var = "text";
 #   $var = 'text';
-_ASSIGN_RE = re.compile(r"(.*?)=(.*)")
+_ASSIGN_RE = re.compile(
+    r"""(^\s*\$(?:[A-Za-z_]\w*|lang\[\s*(?:'[^']+'|"[^"]+")\s*\])\s*=\s*)("([^"\\]|\\.)*"|'([^'\\]|\\.)*')(\s*;\s*$)""",
+    re.MULTILINE
+)
 _STRING_LITERAL_RE = re.compile(
     r"""('([^'\\]|\\.)*'|"([^"\\]|\\.)*")""",
     re.DOTALL
