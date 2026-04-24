@@ -78,12 +78,6 @@ TEMPLATES = {
         "favicon": "templates/template_3/favicon.svg",
         "lang": "templates/template_3/lang.php",
     },
-        "template_4": {
-        "label": "Шаблон 4",
-        "dir": "templates/template_4",
-        "favicon": "templates/template_4/favicon.svg",
-        "lang": "templates/template_4/lang.php",
-    },
 }
 # Default template for Streamlit page icon (does not affect per-domain selection)
 DEFAULT_PAGE_TEMPLATE = "template_1"
@@ -1652,7 +1646,6 @@ elif st.session_state.step == 3:
                         template1_bytes=open(TEMPLATES["template_1"]["lang"], "rb").read(),
                         template2_bytes=open(TEMPLATES["template_2"]["lang"], "rb").read(),
                         template3_bytes=open(TEMPLATES["template_3"]["lang"], "rb").read(),
-                        template4_bytes=open(TEMPLATES["template_4"]["lang"], "rb").read(),
                         domain_templates=st.session_state.get("domain_templates", {}),
                         geo_code=geo_code,
                         geo_currency=geo_currency,
@@ -1689,7 +1682,6 @@ elif st.session_state.step == 3:
                     "template_1": "templates/template_1-1",
                     "template_2": "templates/template_2",
                     "template_3": "templates/template_3",
-                    "template_4": "templates/template_4",
                 }
 
                 dt = st.session_state.get("domain_templates", {})
