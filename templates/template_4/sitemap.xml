@@ -2,34 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://trzon-fundoria.pl/</loc>
+        <loc>https://{{DOMAIN}}/</loc>
     </url>
 
     <url> 
-        <loc>https://trzon-fundoria.pl/sign.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/sign.php</loc>
     </url>
 
     <url>
-        <loc>https://trzon-fundoria.pl/product.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/product.php</loc>
     </url>
 
     <url>
-        <loc>https://trzon-fundoria.pl/privacy.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/privacy.php</loc>
     </url>
 
     <url>
-        <loc>https://trzon-fundoria.pl/offer.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/offer.php</loc>
     </url>
 
     <url>
-        <loc>https://trzon-fundoria.pl/faq.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/faq.php</loc>
     </url>
 
     <url>
-        <loc>https://trzon-fundoria.pl/contacts.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/contacts.php</loc>
     </url>
 
     <url>
-        <loc>https://trzon-fundoria.pl/conditions.php</loc>
+        <loc>https://{{DOMAIN}}/lander/{{DOMAIN}}/conditions.php</loc>
     </url>
 </urlset>
