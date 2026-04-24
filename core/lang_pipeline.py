@@ -1173,119 +1173,38 @@ def _extract_php_array_strings(content):
     pattern = r'\[\s*"([^"]+)"'
     return re.findall(pattern, content)
 
+
 def _extract_strings(content: str) -> Tuple[List[str], List[Tuple[int, int]]]:
-    """
-    1) Рядки у присвоєннях: $x = "..."; та $lang['k'] = '...';
-    2) Рядки всередині масивів для змінних *_list:
-       $foo_list = [
-         'a',
-         'b',
-       ];
-    Пропускаємо SPECIAL_* змінні — їх виставляє генератор.
-    """
     strings: List[str] = []
     spans: List[Tuple[int, int]] = []
-    st.write("STRINGS COUNT:", len(strings))
-    st.write(strings[:5])
 
-    # --- (A) прості присвоєння з одним літералом ---
-    for m in _ASSIGN_RE.finditer(content):
-        prefix = m.group(1)
-        literal = m.group(2)
-        var = _var_name_from_prefix(prefix) or ""
-
-        if var in SPECIAL_NUMERIC or var in SPECIAL_STRING:
-            continue
-
-        # strip quotes (тільки для фільтрів)
-        if literal.startswith('"'):
-            inner = literal[1:-1].replace('\\"', '"').replace("\\\\", "\\")
-        else:
-            inner = literal[1:-1].replace("\\'", "'").replace("\\\\", "\\")
-
-        if not inner.strip():
-            continue
-        if not _is_string_safe_to_transform(inner):
-            continue
-
-        strings.append(inner)
-        start = m.start(2) + 1
-        end = m.end(2) - 1
-        spans.append((start, end))
-
-    # --- (B) масиви для *_list: перекладаємо кожен рядковий елемент ---
-    # знаходимо "$something_list = [" і парсимо до відповідного "];"
-    list_start_re = re.compile(r"(^\s*\$([A-Za-z_]\w*_list)\s*=\s*\[)", re.MULTILINE)
-
-    for m in list_start_re.finditer(content):
-        var = m.group(2)
-        if var in SPECIAL_NUMERIC or var in SPECIAL_STRING:
-            continue
-
-        start_idx = m.end(1)  # позиція одразу після "$var_list = ["
-        i = start_idx
-        depth = 1
-        n = len(content)
-
-        # простий сканер дужок [] з урахуванням лапок (щоб не зламатися на тексті)
-        in_sq = False
-        in_dq = False
-        escape = False
-
-        while i < n and depth > 0:
-            ch = content[i]
-
-            if escape:
-                escape = False
-                i += 1
-                continue
-
-            if ch == "\\":
-                escape = True
-                i += 1
-                continue
-
-            if not in_dq and ch == "'" :
-                in_sq = not in_sq
-                i += 1
-                continue
-
-            if not in_sq and ch == '"':
-                in_dq = not in_dq
-                i += 1
-                continue
-
-            if not in_sq and not in_dq:
-                if ch == "[":
-                    depth += 1
-                elif ch == "]":
-                    depth -= 1
-
-            i += 1
-
-        if depth != 0:
-            continue  # незакритий масив — пропускаємо
-
-        block_start = start_idx
-        block_end = i - 1  # позиція символа ']'
-        block = content[block_start:block_end]
-
-        # тепер всередині блоку знаходимо всі '...' / "..."
-        for sm in _STRING_LITERAL_RE.finditer(block):
-            literal = sm.group(1)
-            inner = literal[1:-1]  # без лапок (escape лишаємо як є)
-
-            if not inner.strip():
-                continue
-            if not _is_string_safe_to_transform(inner):
-                continue
-
-            # глобальні позиції в content: +block_start
-            lit_start = block_start + sm.start(1) + 1
-            lit_end = block_start + sm.end(1) - 1
-
+    # 🔥 1. $var = "text";
+    for m in re.finditer(r'=\s*"((?:[^"\\]|\\.)*)"', content):
+        inner = m.group(1)
+        if inner.strip():
             strings.append(inner)
-            spans.append((lit_start, lit_end))
+            spans.append(m.span(1))
+
+    # 🔥 2. $var = 'text';
+    for m in re.finditer(r"=\s*'((?:[^'\\]|\\.)*)'", content):
+        inner = m.group(1)
+        if inner.strip():
+            strings.append(inner)
+            spans.append(m.span(1))
+
+    # 🔥 3. масиви типу:
+    # $list = [ 'a', "b", ... ]
+    for m in re.finditer(r"\[\s*((?:.|\n)*?)\s*\]", content):
+        block = m.group(1)
+        block_start = m.start(1)
+
+        for sm in re.finditer(r"""(['"])((?:\\.|(?!\1).)*?)\1""", block):
+            inner = sm.group(2)
+            if inner.strip():
+                strings.append(inner)
+                start = block_start + sm.start(2)
+                end = block_start + sm.end(2)
+                spans.append((start, end))
 
     return strings, spans
 
