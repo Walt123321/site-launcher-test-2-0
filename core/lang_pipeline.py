@@ -1753,6 +1753,8 @@ def generate_lang_files(
                 content=_apply_strings(content,spans,outs)
 
 
+        elif template_kind == "template_4":
+            pass
         # -------------------------
         # TEMPLATE 2 (fixed flow)
         # -------------------------
@@ -1863,6 +1865,7 @@ def generate_lang_files_multi(
     template1_bytes: bytes,
     template2_bytes: bytes,
     template3_bytes: bytes,
+    template4_bytes: bytes,
     geo_code: Optional[str],
     geo_currency: str,
     target_lang: str,
@@ -1897,6 +1900,10 @@ def generate_lang_files_multi(
         elif kind in ("template_2", "t2", "2", "template2"):
             tpl = template2_bytes
             tk = "template_2"
+
+        elif kind in ("template_4", "t4", "4", "template4"):
+            tpl = template4_bytes
+            tk = "template_4"
 
         else:
             tpl = template1_bytes
