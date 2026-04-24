@@ -1183,6 +1183,8 @@ def _extract_strings(content: str) -> Tuple[List[str], List[Tuple[int, int]]]:
     """
     strings: List[str] = []
     spans: List[Tuple[int, int]] = []
+    print("STRINGS:", strings[:10])
+    print("COUNT:", len(strings))
 
     # --- (A) прості присвоєння з одним літералом ---
     for m in _ASSIGN_RE.finditer(content):
