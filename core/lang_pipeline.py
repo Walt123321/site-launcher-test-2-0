@@ -1650,90 +1650,90 @@ def generate_lang_files(
         # -------------------------
         # TEMPLATE 4
         # -------------------------
-        elif template_kind == "template_4":
+#        elif template_kind == "template_4":
         
-            import random
+#            import random
         
-            if progress_cb:
-                progress_cb((idx - 1) / total, f"Processing {domain}...")
+#            if progress_cb:
+#                progress_cb((idx - 1) / total, f"Processing {domain}...")
         
-            # --- DOMAIN FIX ---
-            content = content.replace("{{DOMAIN}}", domain)
+#            # --- DOMAIN FIX ---
+#            content = content.replace("{{DOMAIN}}", domain)
         
-            # --- BASIC VARS ---
-            price = _make_price(geo_currency)
+#            # --- BASIC VARS ---
+#            price = _make_price(geo_currency)
         
-            content = _set_php_var(content, "site_name", "$source", numeric=False)
-            content = _set_php_var(content, "site_url", f"https://{domain}", numeric=False)
-            content = _set_php_var(content, "site_domain", domain, numeric=False)
-            content = _set_php_var(content, "app_currency", geo_currency, numeric=False)
-            content = _set_php_var(content, "app_price", str(price), numeric=True)
-            content = _set_php_var(content, "site_lang", target_lang, numeric=False)
-            content = _set_php_var(content, "site_gmail", _gmail_for_domain(domain), numeric=False)
+#            content = _set_php_var(content, "site_name", "$source", numeric=False)
+#            content = _set_php_var(content, "site_url", f"https://{domain}", numeric=False)
+#            content = _set_php_var(content, "site_domain", domain, numeric=False)
+#            content = _set_php_var(content, "app_currency", geo_currency, numeric=False)
+#            content = _set_php_var(content, "app_price", str(price), numeric=True)
+#            content = _set_php_var(content, "site_lang", target_lang, numeric=False)
+#            content = _set_php_var(content, "site_gmail", _gmail_for_domain(domain), numeric=False)
         
-            # --- RATING ---
-            rating_value = round(random.uniform(4.6, 5.0), 1)
-            rating_count = random.randint(300, 3000)
+#            # --- RATING ---
+#            rating_value = round(random.uniform(4.6, 5.0), 1)
+#            rating_count = random.randint(300, 3000)
         
-            content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
-            content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
+#            content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
+#            content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
         
-            # --- REVIEWS (LLM) ---
-            if progress_cb:
-                progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
+#            # --- REVIEWS (LLM) ---
+#            if progress_cb:
+#                progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
         
-            reviews_prompt = f"""
-            Generate 4 realistic user review authors for a financial AI platform.
+#            reviews_prompt = f"""
+#            Generate 4 realistic user review authors for a financial AI platform.
         
-            Language: {target_lang}
-            Country: {geo_code}
+#            Language: {target_lang}
+#            Country: {geo_code}
         
-            Return JSON:
-            [
-            {{"author": "Full Name, City", "initials": "AB"}},
-            {{"author": "...", "initials": "..."}},
-            {{"author": "...", "initials": "..."}},
-            {{"author": "...", "initials": "..."}}
-            ]
-            """
+#            Return JSON:
+#            [
+#            {{"author": "Full Name, City", "initials": "AB"}},
+#            {{"author": "...", "initials": "..."}},
+#            {{"author": "...", "initials": "..."}},
+#            {{"author": "...", "initials": "..."}}
+#            ]
+#            """
         
-            reviews = _call_llm_json(client, model, reviews_prompt)
+#            reviews = _call_llm_json(client, model, reviews_prompt)
         
-            for i, r in enumerate(reviews, start=1):
-                content = _set_php_var(content, f"review_{i}_author", r["author"], numeric=False)
-                content = _set_php_var(content, f"review_{i}_initials", r["initials"], numeric=False)
+#            for i, r in enumerate(reviews, start=1):
+#                content = _set_php_var(content, f"review_{i}_author", r["author"], numeric=False)
+#                content = _set_php_var(content, f"review_{i}_initials", r["initials"], numeric=False)
         
-            # --- META (LLM) ---
-            if progress_cb:
-                progress_cb((idx - 1) / total + 0.5 / total, f"Generating meta...")
+#            # --- META (LLM) ---
+#            if progress_cb:
+#                progress_cb((idx - 1) / total + 0.5 / total, f"Generating meta...")
         
-            meta_prompt = f"""
-            Generate SEO meta title and description for an AI trading platform.
+#            meta_prompt = f"""
+#            Generate SEO meta title and description for an AI trading platform.
         
-            Language: {target_lang}
-            Country: {geo_code}
+#            Language: {target_lang}
+#            Country: {geo_code}
         
-            Return JSON:
-            {{
-            "title": "...",
-            "description": "..."
-            }}
-            """
+#            Return JSON:
+#            {{
+#            "title": "...",
+#            "description": "..."
+#            }}
+#            """
         
-            meta = _call_llm_json(client, model, meta_prompt)
+#            meta = _call_llm_json(client, model, meta_prompt)
         
-            content = _set_php_var(content, "home_meta_title", meta["title"], numeric=False)
-            content = _set_php_var(content, "home_meta_description", meta["description"], numeric=False)
+#            content = _set_php_var(content, "home_meta_title", meta["title"], numeric=False)
+#            content = _set_php_var(content, "home_meta_description", meta["description"], numeric=False)
         
-            # --- FINAL TRANSLATION ---
-            if progress_cb:
-                progress_cb((idx - 1) / total + 0.7 / total, f"Translating...")
+#            # --- FINAL TRANSLATION ---
+#            if progress_cb:
+#                progress_cb((idx - 1) / total + 0.7 / total, f"Translating...")
         
-            strings, spans = _extract_strings(content)
+#            strings, spans = _extract_strings(content)
         
-            if strings:
-                outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
-                content = _apply_strings(content, spans, outs)
+#            if strings:
+#                outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
+#                content = _apply_strings(content, spans, outs)
 
 
         # -------------------------
