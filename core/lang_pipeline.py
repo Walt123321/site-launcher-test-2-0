@@ -1337,7 +1337,7 @@ def _llm_batch_transform(client: OpenAI, model: str, strings: List[str], target_
 # -----------------------------
 # Public API
 # -----------------------------
-def _llm_transform_whole_php(client: OpenAI, model: str, php_text: str, target_lang: str) -> str:
+def _llm_transform_whole_php(client: OpenAI, model: str, php_text: str, target_lang: str, template_name: str = None) -> str:
     base = (target_lang.split("-")[0] if target_lang else TEMPLATE_LANG_BASE).lower()
     mode = "unique" if base == TEMPLATE_LANG_BASE else "translate_unique"
 
@@ -1352,13 +1352,42 @@ def _llm_transform_whole_php(client: OpenAI, model: str, php_text: str, target_l
         "Змінюй ТІЛЬКИ текст усередині лапок у присвоєннях виду: $var = \"...\"; або $var = '...'; "
         "Плейсхолдери, які були як $something, вже захищені токенами — їх залиш як є."
     )
-
-    task = (
-        "Перефразуй (унікалізуй) НІМЕЦЬКИЙ текст у рядках присвоєння. "
-        "Зміст той самий, але формулювання інше. Не роби довшим >20%."
-        if mode == "unique"
-        else f"Переклади на {target_lang} і зроби легку унікалізацію. Не роби довшим >20%."
-    )
+    is_t4 = template_name == "template_4"
+    seed = random.randint(10000, 999999)
+    if is_t4:
+        task = f"""
+    Переклади на {target_lang} І зроби СИЛЬНУ унікалізацію тексту.
+    
+    ДУЖЕ ВАЖЛИВО:
+    - змінюй структуру речень
+    - міняй порядок фраз
+    - використовуй різні формулювання
+    - уникай шаблонних SEO-фраз
+    
+    ВІДГУКИ:
+    - 4 різні стилі:
+    - скептичний
+    - емоційний
+    - спокійний
+    - аналітичний
+    
+    ЗАБОРОНЕНО:
+    - "AI-powered"
+    - "cutting-edge"
+    - "smart tools"
+    
+    ДОВЖИНА:
+    - приблизно така сама (+-15%)
+    
+    SEED: {seed}
+    """
+    else:
+        task = (
+            "Зроби СИЛЬНУ унікалізацію тексту"
+            "Зміст той самий, але формулювання інше. Не роби довшим >20%."
+            if mode == "unique"
+            else f"Переклади на {target_lang} і зроби легку унікалізацію. Не роби довшим >20%."
+        )
 
     user = (
         f"ЗАВДАННЯ: {task}\n\n"
