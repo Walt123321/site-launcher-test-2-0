@@ -1652,28 +1652,90 @@ def generate_lang_files(
         # -------------------------
         elif template_kind == "template_4":
         
-            if progress_cb:
-                progress_cb((idx - 1) / total, f"Генерую базові дані для {domain}…")
+            import random
         
-            # базові поля (як template_1)
+            if progress_cb:
+                progress_cb((idx - 1) / total, f"Processing {domain}...")
+        
+            # --- DOMAIN FIX ---
+            content = content.replace("{{DOMAIN}}", domain)
+        
+            # --- BASIC VARS ---
             price = _make_price(geo_currency)
         
             content = _set_php_var(content, "site_name", "$source", numeric=False)
             content = _set_php_var(content, "site_url", f"https://{domain}", numeric=False)
+            content = _set_php_var(content, "site_domain", domain, numeric=False)
             content = _set_php_var(content, "app_currency", geo_currency, numeric=False)
             content = _set_php_var(content, "app_price", str(price), numeric=True)
             content = _set_php_var(content, "site_lang", target_lang, numeric=False)
             content = _set_php_var(content, "site_gmail", _gmail_for_domain(domain), numeric=False)
         
-            # 🔥 головне — переклад всього тексту
+            # --- RATING ---
+            rating_value = round(random.uniform(4.6, 5.0), 1)
+            rating_count = random.randint(300, 3000)
+        
+            content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
+            content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
+        
+            # --- REVIEWS (LLM) ---
             if progress_cb:
-                progress_cb((idx - 1) / total + 0.6 / total, f"Переклад template_4 для {domain}…")
+                progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
+        
+            reviews_prompt = f"""
+            Generate 4 realistic user review authors for a financial AI platform.
+        
+            Language: {target_lang}
+            Country: {geo_code}
+        
+            Return JSON:
+            [
+            {{"author": "Full Name, City", "initials": "AB"}},
+            {{"author": "...", "initials": "..."}},
+            {{"author": "...", "initials": "..."}},
+            {{"author": "...", "initials": "..."}}
+            ]
+            """
+        
+            reviews = _call_llm_json(client, model, reviews_prompt)
+        
+            for i, r in enumerate(reviews, start=1):
+                content = _set_php_var(content, f"review_{i}_author", r["author"], numeric=False)
+                content = _set_php_var(content, f"review_{i}_initials", r["initials"], numeric=False)
+        
+            # --- META (LLM) ---
+            if progress_cb:
+                progress_cb((idx - 1) / total + 0.5 / total, f"Generating meta...")
+        
+            meta_prompt = f"""
+            Generate SEO meta title and description for an AI trading platform.
+        
+            Language: {target_lang}
+            Country: {geo_code}
+        
+            Return JSON:
+            {{
+            "title": "...",
+            "description": "..."
+            }}
+            """
+        
+            meta = _call_llm_json(client, model, meta_prompt)
+        
+            content = _set_php_var(content, "home_meta_title", meta["title"], numeric=False)
+            content = _set_php_var(content, "home_meta_description", meta["description"], numeric=False)
+        
+            # --- FINAL TRANSLATION ---
+            if progress_cb:
+                progress_cb((idx - 1) / total + 0.7 / total, f"Translating...")
         
             strings, spans = _extract_strings(content)
         
             if strings:
                 outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
                 content = _apply_strings(content, spans, outs)
+
+
         # -------------------------
         # TEMPLATE 2 (fixed flow)
         # -------------------------
