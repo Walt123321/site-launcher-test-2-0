@@ -1762,7 +1762,31 @@ def generate_lang_files(
         # TEMPLATE 4
         # -------------------------
         elif template_kind == "template_4":
-            template_kind = "template_3"
+            content = template_bytes.decode("utf-8")
+        
+            # 1. витягуємо строки
+            strings, spans = _extract_strings(content)
+        
+            # 2. якщо нічого не знайшли — просто повертаємо файл як є
+            if not strings:
+                return [(domains[0], content)]
+        
+            # 3. LLM трансформація
+            outs = _llm_transform_strings_onepass(
+                strings=strings,
+                geo_code=geo_code,
+                geo_currency=geo_currency,
+                target_lang=target_lang,
+                model=model,
+                brand=brand,
+                country_name=country_name,
+                progress_cb=progress_cb,
+            )
+        
+            # 4. застосування назад
+            content = _apply_strings(content, spans, outs)
+        
+            return [(domains[0], content)]
 
 
 
