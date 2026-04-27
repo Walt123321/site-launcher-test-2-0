@@ -629,7 +629,12 @@ def _build_tsv_row(brand: str, geo_code: str, lang_code: str, domains: list[str]
 
     brand = (brand or "").strip()
     geo_name = _geo_name_ua(geo_code or "UNKNOWN")
-    lang = _lang_name_ua(lang_code)
+
+    # GL (geo) — типу cz
+    gl = (geo_code or "").lower()
+
+    # HL (lang) — типу cs
+    hl = (lang_code or "").split("-")[0].lower()
 
     ds = [d.strip() for d in (domains or []) if d and d.strip()]
 
@@ -640,18 +645,18 @@ def _build_tsv_row(brand: str, geo_code: str, lang_code: str, domains: list[str]
     domain_templates = st.session_state.get("domain_templates", {})
 
     if not ds:
-        return f"{brand}\t{geo_name}\t{lang}\t-\t-\t{review_flag}"
-
+        return f"{brand}\t{geo_name}\t{gl}\t{hl}\t-\t-\t{review_flag}"
+    
     rows = []
-
+    
     for d in ds:
         tpl_id = domain_templates.get(d, "template_1")
         tpl_label = TEMPLATES.get(tpl_id, {}).get("label", tpl_id)
-
+    
         rows.append(
-            f"{brand}\t{geo_name}\t{lang}\t{d}\t{tpl_label}\t{review_flag}"
+            f"{brand}\t{geo_name}\t{gl}\t{hl}\t{d}\t{tpl_label}\t{review_flag}"
         )
-
+    
     return "\n".join(rows)
 
 def _set_geo_widget_to_code(cc: str | None):
