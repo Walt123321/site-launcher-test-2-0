@@ -368,7 +368,7 @@ $canonical = 'https://' . $host . $uri;
               </defs>
             </svg>
           </div>
-          <h1><?= $site_name ?> platform</h1>
+          <h1><?= $site_name ?></h1>
             <p><?= $hero_text ?></p>
         </div>
         <form name="form" method="post"
