@@ -940,6 +940,7 @@ $canonical = 'https://' . $host . $uri;
       </div>
     </div>
 
+<?php
 function initials($text) {
     $words = explode(' ', trim($text));
     $result = '';
@@ -953,6 +954,7 @@ function initials($text) {
 
     return $result;
 }
+?>
 
     
       <div class="swiper" data-slider="reviews">
