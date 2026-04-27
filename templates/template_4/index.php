@@ -1373,20 +1373,30 @@ function initials($text) {
       </div>
     </div>
 
-    <!-- specifications -->
-    <section class="py-8 md:py-20">
-<section style="padding:100px 0;">
-  <div style="max-width:1100px;margin:0 auto;padding:0 16px;">
+<!-- specifications -->
+<section class="py-8 md:py-20">
+  <section style="padding:60px 0;">
+    <div style="
+      max-width:100%;
+      margin:0 auto;
+      padding:0 16px;
+      box-sizing:border-box;
+    ">
 
-    <div style="max-width:700px;margin-bottom:50px;">
-      <h2 style="
-        font-size:44px;
-        font-weight:700;
-        line-height:1.2;
-        letter-spacing:-0.02em;
+      <div style="
+        max-width:700px;
+        margin-bottom:40px;
       ">
-        <?= $core_heading ?>
-      </h2>
+        <h2 style="
+          font-size:clamp(24px, 6vw, 44px);
+          font-weight:700;
+          line-height:1.2;
+          letter-spacing:-0.02em;
+          word-break:break-word;
+          overflow-wrap:break-word;
+        ">
+          <?= $core_heading ?>
+        </h2>
 
       <p style="margin-top:14px;color:#6b7280;font-size:17px;">
         <?= $core_description ?>
