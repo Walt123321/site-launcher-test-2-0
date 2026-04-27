@@ -1645,8 +1645,6 @@ def generate_lang_files(
                 outs=_llm_transform_strings_onepass(client,model,strings,target_lang,geo_code)
                 content=_apply_strings(content,spans,outs)
 
-
-
         # -------------------------
         # TEMPLATE 4
         # -------------------------
@@ -1679,49 +1677,52 @@ def generate_lang_files(
                 content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
                 content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
         
-                # --- REVIEWS (LOCAL LANGUAGE FIX) ---
+                # --- REVIEWS (RETRY FIX) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
         
                 seed = random.randint(1000, 999999)
         
                 reviews_prompt = f"""
-        Generate 4 realistic people for testimonials.
+        Generate 4 realistic LOCAL people for testimonials.
         
         Country: {geo_code}
         Language: {target_lang}
         Seed: {seed}
         
         Rules:
-        - Names MUST be native for the country
-        - Use real first + last names typical for locals
-        - NO English names if country is not English-speaking
-        - Add city (native language)
-        - Do NOT add country
-        - Look natural and human
+        - Native names ONLY (NO English if not English country)
+        - Real first + last names
+        - Add city (local language)
+        - NO placeholders like User, Пользователь, etc.
         
         Return ONLY JSON:
         [
-        {{"author": "Full Name, City"}},
-        {{"author": "Full Name, City"}},
-        {{"author": "Full Name, City"}},
-        {{"author": "Full Name, City"}}
+        {{"author": "Name Surname, City"}},
+        {{"author": "Name Surname, City"}},
+        {{"author": "Name Surname, City"}},
+        {{"author": "Name Surname, City"}}
         ]
         """
         
                 reviews = None
-                try:
-                    reviews = _call_llm_json(client, model, reviews_prompt)
-                except:
-                    pass
         
-                # fallback (нейтральний, без англ палєва)
-                if not reviews or not isinstance(reviews, list) or len(reviews) != 4:
+                # 🔥 retry (ключ!)
+                for _ in range(3):
+                    try:
+                        reviews = _call_llm_json(client, model, reviews_prompt)
+                        if reviews and isinstance(reviews, list) and len(reviews) == 4:
+                            break
+                    except:
+                        pass
+        
+                # fallback (НЕ КРІНЖ)
+                if not reviews or len(reviews) != 4:
                     reviews = [
-                        {"author": f"User 1"},
-                        {"author": f"User 2"},
-                        {"author": f"User 3"},
-                        {"author": f"User 4"},
+                        {"author": "Alex Novak"},
+                        {"author": "Martin Horak"},
+                        {"author": "Tomas Dvorak"},
+                        {"author": "Jakub Svoboda"},
                     ]
         
                 for i, r in enumerate(reviews, start=1):
@@ -1732,47 +1733,9 @@ def generate_lang_files(
                     content = _set_php_var(content, f"review_{i}_author", author, numeric=False)
                     content = _set_php_var(content, f"review_{i}_initials", initials, numeric=False)
         
-                # --- META (FIX LANGUAGE) ---
-                if progress_cb:
-                    progress_cb((idx - 1) / total + 0.5 / total, f"Generating meta...")
+                # ❗ META НЕ ЧІПАЄМО — як у template_1-3
         
-                seed = random.randint(1000, 999999)
-        
-                meta_prompt = f"""
-        Generate SEO meta title and description for AI trading platform.
-        
-        Language: {target_lang}
-        Country: {geo_code}
-        Seed: {seed}
-        
-        IMPORTANT:
-        - Write ONLY in the specified language
-        - Sound natural, like a real website
-        - Similar style to financial landing pages
-        
-        Return JSON:
-        {{
-        "title": "...",
-        "description": "..."
-        }}
-        """
-        
-                meta = None
-                try:
-                    meta = _call_llm_json(client, model, meta_prompt)
-                except:
-                    pass
-        
-                if not meta or "title" not in meta:
-                    meta = {
-                        "title": "$source 2026 | AI trading platform",
-                        "description": "$source — AI trading platform with market analysis."
-                    }
-        
-                content = _set_php_var(content, "home_meta_title", meta.get("title"), numeric=False)
-                content = _set_php_var(content, "home_meta_description", meta.get("description"), numeric=False)
-        
-                # --- TRANSLATION (2 PASS FIX) ---
+                # --- TRANSLATION ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.7 / total, f"Translating...")
         
@@ -1782,7 +1745,7 @@ def generate_lang_files(
                     outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
                     content = _apply_strings(content, spans, outs)
         
-                # другий прохід
+                # другий прохід (фікс пропусків)
                 strings, spans = _extract_strings(content)
         
                 if strings:
