@@ -1650,9 +1650,6 @@ def generate_lang_files(
         # -------------------------
         # TEMPLATE 4
         # -------------------------
-# -------------------------
-# TEMPLATE 4
-# -------------------------
         elif template_kind == "template_4":
         
             import random
@@ -1682,24 +1679,26 @@ def generate_lang_files(
                 content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
                 content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
         
-                # --- REVIEWS (LLM, FIXED) ---
+                # --- REVIEWS (LOCAL LANGUAGE FIX) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
         
                 seed = random.randint(1000, 999999)
         
                 reviews_prompt = f"""
-        Generate 4 realistic local people for testimonials.
+        Generate 4 realistic people for testimonials.
         
         Country: {geo_code}
         Language: {target_lang}
         Seed: {seed}
         
         Rules:
-        - Realistic names for the country
-        - Add city
-        - Avoid generic names
-        - Look like real humans
+        - Names MUST be native for the country
+        - Use real first + last names typical for locals
+        - NO English names if country is not English-speaking
+        - Add city (native language)
+        - Do NOT add country
+        - Look natural and human
         
         Return ONLY JSON:
         [
@@ -1716,23 +1715,24 @@ def generate_lang_files(
                 except:
                     pass
         
-                # fallback (НЕ КРІНЖ)
+                # fallback (нейтральний, без англ палєва)
                 if not reviews or not isinstance(reviews, list) or len(reviews) != 4:
                     reviews = [
-                        {"author": f"Alex Morgan, {geo_code}"},
-                        {"author": f"Daniel Foster, {geo_code}"},
-                        {"author": f"Chris Bennett, {geo_code}"},
-                        {"author": f"Ryan Cooper, {geo_code}"}
+                        {"author": f"User 1"},
+                        {"author": f"User 2"},
+                        {"author": f"User 3"},
+                        {"author": f"User 4"},
                     ]
         
                 for i, r in enumerate(reviews, start=1):
-                    author = r.get("author", f"User {i}, {geo_code}")
+                    author = r.get("author", f"User {i}")
+        
                     initials = "".join([x[0] for x in author.split(",")[0].split()][:2]).upper()
         
                     content = _set_php_var(content, f"review_{i}_author", author, numeric=False)
                     content = _set_php_var(content, f"review_{i}_initials", initials, numeric=False)
         
-                # --- META (КАК В TEMPLATE 1-3 + NOISE) ---
+                # --- META (FIX LANGUAGE) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.5 / total, f"Generating meta...")
         
@@ -1745,7 +1745,10 @@ def generate_lang_files(
         Country: {geo_code}
         Seed: {seed}
         
-        Style: similar to financial landing pages.
+        IMPORTANT:
+        - Write ONLY in the specified language
+        - Sound natural, like a real website
+        - Similar style to financial landing pages
         
         Return JSON:
         {{
@@ -1762,14 +1765,14 @@ def generate_lang_files(
         
                 if not meta or "title" not in meta:
                     meta = {
-                        "title": f"$source 2026 | AI trading platform",
-                        "description": "$source ⭐ — AI trading platform with real-time market analysis and smart signals."
+                        "title": "$source 2026 | AI trading platform",
+                        "description": "$source — AI trading platform with market analysis."
                     }
         
                 content = _set_php_var(content, "home_meta_title", meta.get("title"), numeric=False)
                 content = _set_php_var(content, "home_meta_description", meta.get("description"), numeric=False)
         
-                # --- TRANSLATION (2 PASS = FIX ПРОПУСКОВ) ---
+                # --- TRANSLATION (2 PASS FIX) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.7 / total, f"Translating...")
         
@@ -1779,7 +1782,7 @@ def generate_lang_files(
                     outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
                     content = _apply_strings(content, spans, outs)
         
-                # 🔥 ДОБИВАЄ ПРОПУЩЕНІ ШМАТКИ
+                # другий прохід
                 strings, spans = _extract_strings(content)
         
                 if strings:
