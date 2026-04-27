@@ -401,15 +401,21 @@ $canonical = 'https://' . $host . $uri;
     <div class="relative grid gap-x-4 gap-y-6 lg:grid-cols-3">
       <div class="backline"></div>
       
-      <?php foreach ($offer_how_it_works_steps as $step): ?>
-        <div class="border-primary h3 rounded-custom relative z-10 flex items-center justify-center border bg-white p-4 text-center md:p-6">
-          <?= $step ?>
-        </div>
-      <?php endforeach; ?>
-      
+    <div class="border-primary h3 rounded-custom relative z-10 flex items-center justify-center border bg-white p-4 text-center md:p-6">
+      <?= $step_1 ?>
     </div>
-  </div>
-</div>
+
+    <div class="border-primary h3 rounded-custom relative z-10 flex items-center justify-center border bg-white p-4 text-center md:p-6">
+      <?= $step_2 ?>
+    </div>
+
+    <div class="border-primary h3 rounded-custom relative z-10 flex items-center justify-center border bg-white p-4 text-center md:p-6">
+      <?= $step_3 ?>
+    </div>
+      
+        </div>
+      </div>
+    </div>
 
       <!-- registration-1 -->
       <div class="py-8 md:py-10">
