@@ -12,14 +12,10 @@ $site_lang = "it-IT";
 
 
 // Reviews
-$review_1_author = "James Mitchell, Manchester";
-$review_1_initials = "JM";
-$review_2_author = "Mike Rydman, Bristol";
-$review_2_initials = "MR";
-$review_3_author = "Elizabeth Thornton, Manchester";
-$review_3_initials = "ET";
-$review_4_author = "Eleanor Blackwell, Manchester";
-$review_4_initials = "ET";
+$review_1_author = "Private Investor";
+$review_2_author = "Independent Trader";
+$review_3_author = "Digital Asset Trader";
+$review_4_author = "Passive Income Seeker";
 
 
 // MAIN TITLE/DESCRIPTION
