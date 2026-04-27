@@ -461,5 +461,9 @@ $canonical = 'https://' . $host . $uri;
       </div>
     </div>
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.12/build/js/intlTelInput.min.js"></script>
+  <script src="./integration/validation.js"></script>
+  <script src="./assets/js/lazyload.min.js" defer></script>
+  <script src="./assets/js/scripts.js" defer></script>
   </body>
 </html>
