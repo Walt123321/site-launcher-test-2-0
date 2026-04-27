@@ -7,17 +7,26 @@ $jsToken = $_SESSION['js_token'];
 
 require_once 'offer_seo.php';
 include 'lang.php';
-?>
 
-<?php
 $host = $_SERVER['HTTP_HOST'];
 $uri = strtok($_SERVER['REQUEST_URI'], '?'); // без GET-параметрів
 
 $canonical = 'https://' . $host . $uri;
+
+function initials($text) {
+    $words = explode(' ', trim($text));
+    $result = '';
+
+    foreach ($words as $w) {
+        if (!empty($w)) {
+            $result .= mb_strtoupper(mb_substr($w, 0, 1));
+        }
+        if (mb_strlen($result) >= 2) break;
+    }
+
+    return $result;
+}
 ?>
-
-<link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>" />
-
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="<?= $site_lang ?>" data-theme="orange">
 <!-- head -->
@@ -67,6 +76,7 @@ $canonical = 'https://' . $host . $uri;
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <title><?= $home_meta_title ?></title>
     <meta name="description" content="<?= $home_meta_description ?>" />
@@ -164,8 +174,7 @@ $canonical = 'https://' . $host . $uri;
     });
   </script>
 
-  <script src="./assets/js/lazyload.min.js" defer></script>
-  <script src="./assets/js/scripts.js" defer></script>
+
 
 
 
@@ -940,21 +949,6 @@ $canonical = 'https://' . $host . $uri;
       </div>
     </div>
 
-<?php
-function initials($text) {
-    $words = explode(' ', trim($text));
-    $result = '';
-
-    foreach ($words as $w) {
-        if (!empty($w)) {
-            $result .= mb_strtoupper(mb_substr($w, 0, 1));
-        }
-        if (mb_strlen($result) >= 2) break;
-    }
-
-    return $result;
-}
-?>
 
     
       <div class="swiper" data-slider="reviews">
@@ -1690,6 +1684,8 @@ $stars = str_repeat('★', (int) round($rating_value));
 
   <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.12/build/js/intlTelInput.min.js"></script>
   <script src="./integration/validation.js"></script>
+  <script src="./assets/js/lazyload.min.js" defer></script>
+  <script src="./assets/js/scripts.js" defer></script>
 </body>
 
 </html>
