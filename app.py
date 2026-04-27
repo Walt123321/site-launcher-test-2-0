@@ -628,7 +628,7 @@ def _build_tsv_row(brand: str, geo_code: str, lang_code: str, domains: list[str]
     """
 
     brand = (brand or "").strip()
-    geo_name = _geo_name_ua(geo_code or "UNKNOWN")
+    geo_name = _geo_name(geo_code or "UNKNOWN")
 
     # GL (geo) — типу cz
     gl = (geo_code or "").lower()
@@ -729,10 +729,10 @@ def _set_step(n: int):
     st.session_state.needs_rerun = True
 
 
-def _geo_name_ua(geo_code: str) -> str:
+def _geo_name(geo_code: str) -> str:
     if not geo_code or geo_code == "UNKNOWN":
         return "Невідомо"
-    return geo.get(geo_code, {}).get("ua_name", geo_code)
+    return geo.get(geo_code, {}).get("name", geo_code)
 
 
 def _build_buy_task_text(brand: str, domains: list[str]) -> str:
