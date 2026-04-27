@@ -314,6 +314,7 @@ $privacy_page_h1 = "Privacy Policy";
 // PRIVACY SHORT
 
 // LAST UPDATED (вчора)
+$last_update = "Last update"
 $privacy_last_update = date('d.m.Y', strtotime('-1 day'));
 
 // INTRO
