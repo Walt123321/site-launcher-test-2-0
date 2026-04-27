@@ -1678,60 +1678,35 @@ def generate_lang_files(
                 content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
         
                 # =========================
-                # REVIEWS (ПРАВИЛЬНО)
+                # REVIEWS (NO NAMES, ONLY ROLES)
                 # =========================
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
         
-                seed = random.randint(1000, 999999)
+                roles = [
+                    "Private Investor",
+                    "Retail Trader",
+                    "Crypto Enthusiast",
+                    "Financial Analyst",
+                    "Independent Trader",
+                    "Part-time Investor",
+                    "Online Trader",
+                    "Forex Trader",
+                    "Stock Investor",
+                    "Digital Asset Trader",
+                    "Market Follower",
+                    "Beginner Trader",
+                    "Experienced Investor",
+                    "Portfolio Manager",
+                    "Passive Income Seeker"
+                ]
         
-                reviews_prompt = f"""
-        Generate 4 realistic native names for people from the given country.
+                selected_roles = random.sample(roles, 4)
         
-        Country: {geo_code}
-        Language: {target_lang}
-        Seed: {seed}
+                for i, role in enumerate(selected_roles, start=1):
+                    content = _set_php_var(content, f"review_{i}_author", role, numeric=False)
         
-        Rules:
-        - Native names ONLY for that country
-        - Realistic modern names (NOT generic like Ivan Ivanov)
-        - First name + last name ONLY
-        - No placeholders
-        
-        Return JSON:
-        [
-        {{"author": "Name Surname"}},
-        {{"author": "Name Surname"}},
-        {{"author": "Name Surname"}},
-        {{"author": "Name Surname"}}
-        ]
-        """
-        
-                reviews = _call_llm_json(client, model, reviews_prompt)
-        
-                # базова страховка (без крінжу)
-                if not reviews or not isinstance(reviews, list) or len(reviews) != 4:
-                    reviews = [
-                        {"author": "Alex Carter"},
-                        {"author": "Daniel Moore"},
-                        {"author": "Chris Bennett"},
-                        {"author": "Ryan Cooper"},
-                    ]
-        
-                # 👉 ЗБЕРІГАЄМО ІМЕНА ОКРЕМО (щоб не переклались)
-                review_authors = []
-                review_initials = []
-        
-                for i, r in enumerate(reviews, start=1):
-                    author = r.get("author", f"User {i}")
-                    initials = "".join([x[0] for x in author.split()[:2]]).upper()
-        
-                    review_authors.append(author)
-                    review_initials.append(initials)
-        
-                    # ставимо placeholder
-                    content = _set_php_var(content, f"review_{i}_author", f"__AUTHOR_{i}__", numeric=False)
-                    content = _set_php_var(content, f"review_{i}_initials", f"__INIT_{i}__", numeric=False)
+                # ❗ initials більше НЕ використовуємо
         
                 # =========================
                 # TRANSLATION
@@ -1742,22 +1717,19 @@ def generate_lang_files(
                 strings, spans = _extract_strings(content)
         
                 if strings:
-                    outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
+                    outs = _llm_transform_strings_onepass(
+                        client, model, strings, target_lang, geo_code
+                    )
                     content = _apply_strings(content, spans, outs)
         
-                # другий прохід
+                # другий прохід (щоб добити залишки)
                 strings, spans = _extract_strings(content)
         
                 if strings:
-                    outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
+                    outs = _llm_transform_strings_onepass(
+                        client, model, strings, target_lang, geo_code
+                    )
                     content = _apply_strings(content, spans, outs)
-        
-                # =========================
-                # ВЕРТАЄМО ІМЕНА НАЗАД
-                # =========================
-                for i in range(4):
-                    content = content.replace(f"__AUTHOR_{i+1}__", review_authors[i])
-                    content = content.replace(f"__INIT_{i+1}__", review_initials[i])
         
             except Exception as e:
                 print("TEMPLATE_4 FAILED:", e)
