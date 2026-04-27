@@ -103,22 +103,30 @@ const initInitials = () => {
 };
 
 //===============================================================
-const toggleAccordion = (index) => {
+window.toggleAccordion = function (index) {
   const currentAccordion = document.getElementById(`accordion-${index}`);
   const currentContent = document.getElementById(`content-${index}`);
+
+  if (!currentAccordion || !currentContent) return;
+
   const isActive = currentAccordion.hasAttribute("data-active");
 
   const allAccordions = document.querySelectorAll('[id^="accordion-"]');
   const allContents = document.querySelectorAll('[id^="content-"]');
 
   allAccordions.forEach((acc) => acc.removeAttribute("data-active"));
-  allContents.forEach((content) => (content.style.maxHeight = "0"));
+
+  allContents.forEach((content) => {
+    content.style.maxHeight = "0px";
+  });
 
   if (isActive) return;
 
   currentAccordion.setAttribute("data-active", "");
   currentContent.style.maxHeight = currentContent.scrollHeight + "px";
 };
+
+
 
 //===============================================================
 const initTrading = () => {
@@ -173,4 +181,3 @@ function toggleSeo() {
     icon.style.transform = "rotate(180deg)";
   }
 }
-
