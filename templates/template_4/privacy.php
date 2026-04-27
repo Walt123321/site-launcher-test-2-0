@@ -303,7 +303,7 @@ $canonical = 'https://' . $host . $uri;
 
   <!-- INTRO -->
   <div class="grid gap-2">
-    <p class="text-sm">Last update: <?= $privacy_last_update ?></p>
+    <p class="text-sm"><?= $last_update ?>: <?= $privacy_last_update ?></p>
     <p><?= $privacy_intro ?></p>
   </div>
 
