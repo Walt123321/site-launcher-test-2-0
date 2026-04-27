@@ -676,21 +676,21 @@ $canonical = 'https://' . $host . $uri;
       <div class="container-base grid gap-6 md:gap-10">
         <h2><?= $partners_heading ?></h2>
         <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-1.svg" alt="partner 1" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-1.svg" alt="partner 1" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-2.svg" alt="partner 2" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-2.svg" alt="partner 2" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-3.svg" alt="partner 3" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-3.svg" alt="partner 3" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-4.svg" alt="partner 4" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-4.svg" alt="partner 4" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-5.svg" alt="partner 5" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-5.svg" alt="partner 5" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-6.svg" alt="partner 6" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-6.svg" alt="partner 6" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-7.svg" alt="partner 7" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-7.svg" alt="partner 7" width="294"
             height="113" data-lazy />
-          <img class="aspect-294/113 w-full" data-src="./assets/img/svg/partner-8.svg" alt="partner 8" width="294"
+          <img class="aspect-294/113 w-full" src="./assets/img/svg/partner-8.svg" alt="partner 8" width="294"
             height="113" data-lazy />
         </div>
       </div>
