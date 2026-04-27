@@ -1375,9 +1375,9 @@ function initials($text) {
 
 <!-- specifications -->
 <section class="py-8 md:py-20">
-  <section style="padding:60px 0;">
+  <section style="padding:60px 0;" class="md:!py-[100px]">
     <div style="
-      max-width:100%;
+      max-width:90%;
       margin:0 auto;
       padding:0 16px;
       box-sizing:border-box;
@@ -1385,7 +1385,7 @@ function initials($text) {
 
       <div style="
         max-width:700px;
-        margin-bottom:40px;
+        margin-bottom:50px;
       ">
         <h2 style="
           font-size:clamp(24px, 6vw, 44px);
@@ -1627,7 +1627,7 @@ $stars = str_repeat('★', (int) round($rating_value));
           </nav>
           <div class="flex justify-between gap-5">
             <div class="grid gap-5 text-white">
-              <p><?= $footer_partner_text ?></p>
+              <p style="color:#6B5FA7;"><?= $footer_partner_text ?></p>
               <div class="inline-flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
