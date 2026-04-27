@@ -1544,16 +1544,16 @@ $stars = str_repeat('★', (int) round($rating_value));
 ?>
 
 <div class="md:border-primary-light md:rounded-[20px] md:border md:px-20 md:py-8">
-  <div class="border-primary-light grid justify-items-center gap-6 rounded-[20px] border px-4 py-5 md:gap-4 md:px-8 md:py-6">
+  <div class="border-primary-light grid justify-items-center gap-6 rounded-[20px] border px-4 py-5 md:gap-4 md:px-8 md:py-6 text-center md:text-left">
 
-    <h2 class="h3 flex flex-wrap items-center gap-x-4 gap-y-5">
+    <h2 class="h3 flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-3">
       <?= $trust_heading ?>
       <span class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-2 py-1 text-sm leading-none text-white uppercase">
         <?= $trust_badge_text ?>
       </span>
     </h2>
 
-    <div class="flex flex-wrap items-center gap-2.5">
+    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-center md:text-left">
       <strong class="leading-none text-emerald-600">
         <?= $rating_value ?>
       </strong>
@@ -1563,7 +1563,7 @@ $stars = str_repeat('★', (int) round($rating_value));
         <?= $stars ?>
       </span>
 
-      <span class="flex flex-wrap gap-1 text-sm text-gray-400">
+      <span class="flex flex-wrap justify-center md:justify-start gap-1 text-sm text-gray-400">
         <span>
           <strong><?= $trust_reviews_count ?></strong> <?= $trust_stat_reviews ?> ·
         </span>
@@ -1576,7 +1576,7 @@ $stars = str_repeat('★', (int) round($rating_value));
       </span>
     </div>
 
-    <p class="text-center">
+    <p class="text-center md:text-left">
       <?= $trust_summary_text ?>
     </p>
 
