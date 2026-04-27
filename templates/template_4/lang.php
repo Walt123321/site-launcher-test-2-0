@@ -393,7 +393,7 @@ $conditions_h1 = "Conditions of Use";
 // CONDITIONS SHORT
 
 $conditions_s1_title = "1. General";
-$conditions_s1_text = "This Website provides information about third-party trading platforms and related services. By using the Website, you agree to these Terms and our Privacy Policy. Terms may be updated at any time. Contact: info@$site_domain";
+$conditions_s1_text = "This Website provides information about third-party trading platforms and related services. By using the Website, you agree to these Terms and our Privacy Policy. Terms may be updated at any time.";
 
 $conditions_s2_title = "2. Eligibility";
 $conditions_s2_text = "You must be at least 18 years old, able to accept these Terms, and not restricted by your local laws. We are not responsible for unlawful use of the Website.";
