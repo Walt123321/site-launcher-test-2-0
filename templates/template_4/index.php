@@ -949,7 +949,7 @@ $canonical = 'https://' . $host . $uri;
               <?= $review_1_text ?>
             </p>
             <div class="flex items-center gap-4">
-              <div class="initials"><?= $review_1_initials ?></div>
+              <div class="initials"><?= initials($review_1_author) ?></div>
               <p class="font-bold"><?= $review_1_author ?></p>
             </div>
           </div>
@@ -961,7 +961,7 @@ $canonical = 'https://' . $host . $uri;
                   <?= $review_2_text ?>
                 </p>
             <div class="flex items-center gap-4">
-              <div class="initials"><?= $review_2_initials ?></div>
+              <div class="initials"><?= initials($review_2_author) ?></div>
               <p class="font-bold"><?= $review_2_author ?></p>
             </div>
           </div>
@@ -973,7 +973,7 @@ $canonical = 'https://' . $host . $uri;
                   <?= $review_3_text ?>
                 </p>
             <div class="flex items-center gap-4">
-              <div class="initials"><?= $review_3_initials ?></div>
+              <div class="initials"><?= initials($review_3_author) ?></div>
               <p class="font-bold"><?= $review_3_author ?></p>
             </div>
           </div>
@@ -985,7 +985,7 @@ $canonical = 'https://' . $host . $uri;
                   <?= $review_4_text ?>
                 </p>
             <div class="flex items-center gap-4">
-              <div class="initials"><?= $review_4_initials ?></div>
+              <div class="initials"><?= initials($review_4_author) ?></div>
               <p class="font-bold"><?= $review_4_author ?></p>
             </div>
           </div>
