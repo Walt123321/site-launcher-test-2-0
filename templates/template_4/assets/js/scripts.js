@@ -173,3 +173,19 @@ function toggleSeo() {
     icon.style.transform = "rotate(180deg)";
   }
 }
+
+
+
+function initials($text) {
+    $words = explode(' ', trim($text));
+    $result = '';
+
+    foreach ($words as $w) {
+        if (!empty($w)) {
+            $result .= mb_strtoupper(mb_substr($w, 0, 1));
+        }
+        if (mb_strlen($result) >= 2) break;
+    }
+
+    return $result;
+}
