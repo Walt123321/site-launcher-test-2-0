@@ -368,11 +368,10 @@ $offer_cta_h1 = "Get Portfolio Tracker";
 $offer_cta_text = "Get started in minutes: sign up, deposit, and begin trading in just 5 minutes. Start now.";
 $offer_how_it_works_title = "How it works";
 
-$offer_how_it_works_steps = [
-    "Create an account",
-    "Add funds to your account",
-    "Start buying and selling"
-];
+$step_1 = "Create an account";
+$step_2 = "Add funds to your account";
+$step_3 = "Start buying and selling";
+
 $offer_official_platform_title = "This is trading with the official platform™";
 $offer_official_platform_text = "We're the trusted platform for individuals and businesses to buy, sell, and manage cryptocurrency.";
 $faq_page_title = "FAQ";
