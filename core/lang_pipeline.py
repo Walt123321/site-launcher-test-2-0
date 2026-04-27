@@ -1650,6 +1650,9 @@ def generate_lang_files(
         # -------------------------
         # TEMPLATE 4
         # -------------------------
+# -------------------------
+# TEMPLATE 4
+# -------------------------
         elif template_kind == "template_4":
         
             import random
@@ -1679,22 +1682,31 @@ def generate_lang_files(
                 content = _set_php_var(content, "rating_value", str(rating_value), numeric=True)
                 content = _set_php_var(content, "rating_count", str(rating_count), numeric=True)
         
-                # --- REVIEWS (LLM SAFE) ---
+                # --- REVIEWS (LLM, FIXED) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.3 / total, f"Generating reviews...")
         
-                reviews_prompt = f"""
-        Generate 4 realistic user names for a financial AI platform.
+                seed = random.randint(1000, 999999)
         
-        Language: {target_lang}
+                reviews_prompt = f"""
+        Generate 4 realistic local people for testimonials.
+        
         Country: {geo_code}
+        Language: {target_lang}
+        Seed: {seed}
+        
+        Rules:
+        - Realistic names for the country
+        - Add city
+        - Avoid generic names
+        - Look like real humans
         
         Return ONLY JSON:
         [
-        {{"author": "Full Name, City", "initials": "AB"}},
-        {{"author": "Full Name, City", "initials": "CD"}},
-        {{"author": "Full Name, City", "initials": "EF"}},
-        {{"author": "Full Name, City", "initials": "GH"}}
+        {{"author": "Full Name, City"}},
+        {{"author": "Full Name, City"}},
+        {{"author": "Full Name, City"}},
+        {{"author": "Full Name, City"}}
         ]
         """
         
@@ -1704,36 +1716,41 @@ def generate_lang_files(
                 except:
                     pass
         
-                # fallback якщо LLM тупанув
+                # fallback (НЕ КРІНЖ)
                 if not reviews or not isinstance(reviews, list) or len(reviews) != 4:
                     reviews = [
-                        {"author": f"User One, {geo_code}", "initials": "UO"},
-                        {"author": f"User Two, {geo_code}", "initials": "UT"},
-                        {"author": f"User Three, {geo_code}", "initials": "UT"},
-                        {"author": f"User Four, {geo_code}", "initials": "UF"},
+                        {"author": f"Alex Morgan, {geo_code}"},
+                        {"author": f"Daniel Foster, {geo_code}"},
+                        {"author": f"Chris Bennett, {geo_code}"},
+                        {"author": f"Ryan Cooper, {geo_code}"}
                     ]
         
                 for i, r in enumerate(reviews, start=1):
                     author = r.get("author", f"User {i}, {geo_code}")
-                    initials = r.get("initials", "UU")
+                    initials = "".join([x[0] for x in author.split(",")[0].split()][:2]).upper()
         
                     content = _set_php_var(content, f"review_{i}_author", author, numeric=False)
                     content = _set_php_var(content, f"review_{i}_initials", initials, numeric=False)
         
-                # --- META (LLM SAFE) ---
+                # --- META (КАК В TEMPLATE 1-3 + NOISE) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.5 / total, f"Generating meta...")
         
+                seed = random.randint(1000, 999999)
+        
                 meta_prompt = f"""
-        Generate SEO meta for an AI trading platform.
+        Generate SEO meta title and description for AI trading platform.
         
         Language: {target_lang}
         Country: {geo_code}
+        Seed: {seed}
         
-        Return ONLY JSON:
+        Style: similar to financial landing pages.
+        
+        Return JSON:
         {{
-        "title": "short SEO title",
-        "description": "short SEO description"
+        "title": "...",
+        "description": "..."
         }}
         """
         
@@ -1745,14 +1762,14 @@ def generate_lang_files(
         
                 if not meta or "title" not in meta:
                     meta = {
-                        "title": f"{domain} - AI Trading",
-                        "description": "AI trading platform for automated market analysis."
+                        "title": f"$source 2026 | AI trading platform",
+                        "description": "$source ⭐ — AI trading platform with real-time market analysis and smart signals."
                     }
         
                 content = _set_php_var(content, "home_meta_title", meta.get("title"), numeric=False)
                 content = _set_php_var(content, "home_meta_description", meta.get("description"), numeric=False)
         
-                # --- TRANSLATION ---
+                # --- TRANSLATION (2 PASS = FIX ПРОПУСКОВ) ---
                 if progress_cb:
                     progress_cb((idx - 1) / total + 0.7 / total, f"Translating...")
         
@@ -1762,10 +1779,16 @@ def generate_lang_files(
                     outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
                     content = _apply_strings(content, spans, outs)
         
+                # 🔥 ДОБИВАЄ ПРОПУЩЕНІ ШМАТКИ
+                strings, spans = _extract_strings(content)
+        
+                if strings:
+                    outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
+                    content = _apply_strings(content, spans, outs)
+        
             except Exception as e:
                 print("TEMPLATE_4 FAILED:", e)
                 continue
-
 
         # -------------------------
         # TEMPLATE 2 (fixed flow)
