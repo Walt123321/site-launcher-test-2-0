@@ -2010,7 +2010,7 @@
   border-bottom: var(--iti-arrow-height) solid var(--iti-arrow-color);
 }
 .iti__dropdown-content {
-  background-color: var(--iti-dropdown-bg);
+  background-color: #fff;
   border-radius: 3px;
 }
 .iti--inline-dropdown .iti__dropdown-content {
