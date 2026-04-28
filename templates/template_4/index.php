@@ -27,6 +27,16 @@ function initials($text) {
     return $result;
 }
 ?>
+
+
+<?php
+if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
+    $host = substr($_SERVER['HTTP_HOST'], 4);
+    header("Location: https://" . $host . $_SERVER['REQUEST_URI'], true, 301);
+    exit();
+}
+?>
+    
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="<?= $site_lang ?>" data-theme="orange">
 <!-- head -->
