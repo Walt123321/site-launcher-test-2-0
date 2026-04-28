@@ -36,6 +36,7 @@ function initials($text) {
 {
   "@context": "https://schema.org/",
   "@type": "BreadcrumbList",
+  "name": "<?= $site_name ?>",
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -183,6 +184,7 @@ function initials($text) {
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        "name": "<?= $site_name ?>",
         "mainEntity": [
           {
             "@type": "Question",
