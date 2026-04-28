@@ -8,7 +8,14 @@ $jsToken = $_SESSION['js_token'];
 require_once 'offer_seo.php';
 include 'lang.php';
 ?>
-
+<?php
+if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
+    $host = substr($_SERVER['HTTP_HOST'], 4);
+    header("Location: https://" . $host . $_SERVER['REQUEST_URI'], true, 301);
+    exit();
+}
+?>
+    
 <?php
 $host = $_SERVER['HTTP_HOST'];
 $uri = strtok($_SERVER['REQUEST_URI'], '?'); // без GET-параметрів
