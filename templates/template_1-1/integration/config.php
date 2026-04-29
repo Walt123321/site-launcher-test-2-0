@@ -1,7 +1,7 @@
 <?php
 
 // TelegramBot values
-define('TGBOT_TOKEN', '8176792283:AAH_6c6CAcMuQyM-yS6G8MiJ0C1nh1aLjeg');
+define('TGBOT_TOKEN', '8770123545:AAHyOSz_m_WJIDq0EHDe49TNVz0-yf-L6rg');
 define('TGBOT_TECHLOG_CHATID', '-1003013176906');   // AM Domains Log
 define('TGBOT_TECH_TEST_CHATID', '-1003164975874'); // AM Domains Test Log
 
